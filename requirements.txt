@@ -1,0 +1,19 @@
+# Python 3.14. Autoencoder uses Keras 3 on the PyTorch backend (no stable TensorFlow for 3.14).
+# Set KERAS_BACKEND=torch (src/ code sets it before importing keras).
+numpy==2.5.5
+pandas==3.1.1
+pyarrow==26.0.1
+scipy==1.18.1
+scikit-learn==1.9.1
+xgboost==3.4.1
+imbalanced-learn==0.14.2
+shap==0.54.1
+torch==2.15.0
+keras==3.15.1
+matplotlib==3.11.2
+seaborn==0.13.2
+plotly==7.1.0
+streamlit==1.67.0
+PyYAML==6.0.4
+joblib==1.6.0
+ipykernel==7.4.0

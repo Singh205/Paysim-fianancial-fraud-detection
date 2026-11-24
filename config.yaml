@@ -1,0 +1,151 @@
+# PaySim fraud detection: settings from the proposal report (docs/, Sections 3.2-3.8, 4.3-4.4).
+# Change a value here only after agreeing it; the report is the spec.
+
+seed: 42
+
+paths:
+  raw_csv: data/raw/PS_20174392719_1491204439457_log.csv
+  processed: data/processed
+  models: models
+  results: results
+
+data:
+  model_types: [TRANSFER, CASH_OUT]      # other types are legitimate by rule
+  drop_columns: [nameOrig, nameDest]
+  baseline_rule_column: isFlaggedFraud    # baseline only, never a feature
+  target: isFraud
+  dtypes:
+    step: int16
+    type: category
+    amount: float32
+    nameOrig: string
+    oldbalanceOrg: float32
+    newbalanceOrig: float32
+    nameDest: string
+    oldbalanceDest: float32
+    newbalanceDest: float32
+    isFraud: int8
+    isFlaggedFraud: int8
+  expected:                                # confirmed in step 0 (results/checks.json)
+    rows: 6362620
+    frauds: 8213
+    steps: 743                             # data has steps 1..743 (report says 744)
+    fraud_transfer: 4097
+    fraud_cash_out: 4116
+
+features:
+  all: [amount, oldbalanceOrg, newbalanceOrig, oldbalanceDest, newbalanceDest,
+        errorBalanceOrig, errorBalanceDest, hour, is_transfer]
+  # Every model is trained once per setting. "no_balance" is the report's ablation;
+  # "no_balance_no_hour" is added because legit volume is near zero at night, so
+  # hour is also a shortcut (320 of 743 steps contain only fraud).
+  ablation:
+    all: []
+    no_balance: [oldbalanceOrg, newbalanceOrig, oldbalanceDest, newbalanceDest,
+                 errorBalanceOrig, errorBalanceDest]
+    no_balance_no_hour: [oldbalanceOrg, newbalanceOrig, oldbalanceDest, newbalanceDest,
+                         errorBalanceOrig, errorBalanceDest, hour]
+
+split:                                     # chronological: ordered by step, cut by ROW count
+  method: rows                             # cut moved to the end of a step; no hour shared
+  train: 0.70
+  val: 0.15
+  test: 0.15
+
+models:
+  logistic_regression:
+    class_weight: balanced
+    C: [0.01, 0.1, 1, 10]
+  random_forest:
+    n_estimators: 300
+    max_depth: [10, 20]
+    min_samples_leaf: [5, 20]
+    class_weight: balanced_subsample
+    n_jobs: -1
+  xgboost:
+    n_estimators: 500
+    learning_rate: 0.05
+    max_depth: 6
+    subsample: 0.8
+    colsample_bytree: 0.8
+    scale_pos_weight: from_train
+    early_stopping_metric: aucpr
+  isolation_forest:
+    n_estimators: 200
+    contamination: from_train            # about 0.003
+  autoencoder:                             # extra; Keras 3 on torch backend
+    layers: [16, 8, 4, 8, 16]
+    train_on: legit_only
+    early_stopping: true
+  smote:                                   # extra; train set only (SMOTENC: hour, is_transfer categorical)
+    ratio: 0.1                             # frauds raised to 10% of legit rows (~195k), no class weights
+  amount_weighting:                        # extra
+    cap: 10
+
+threshold:
+  rule: max_f1_on_validation
+
+evaluation:
+  bootstrap_resamples: 1000
+  ci: 0.95
+  precision_target: 0.90                   # R@P90
+  learning_curve_fractions: [0.10, 0.25, 0.50, 1.00]
+  rolling_blocks: 5                        # 4 expanding folds; blocks of EQUAL ROW COUNT (end of step)
+  rolling_match_prevalence: true           # each fold's validation block is scored at the lowest
+  rolling_match_draws: 20                  # block fraud rate (frauds subsampled, 20 draws, averaged)
+  overfit_ratio_max: 0.10
+  rolling_rel_sd_max: 0.10
+  overfit:
+    guard_pair: [train, val]               # selection guard uses train -> val (test stays unseen)
+    report_pairs: [[train, val], [val, test], [train, test]]  # train -> test reported after selection
+    # AUC-PR depends on the fraud rate, which differs between sets. The train
+    # sample is drawn to MATCH the fraud rate of the set it is compared with
+    # (all train frauds kept, legit rows subsampled), and AUC-ROC is reported too.
+    match_prevalence: true
+    also_report: [auc_roc]
+
+selection:                                 # report Section 4.4, all on VALIDATION
+  data: val
+  winner_test: bootstrap_diff_ci_excludes_0   # on validation resamples
+  bias_guard_on: val                       # bias audit run on val for the guard, confirmed on test
+  tie_breakers: [recall_at_K, money_at_K, r_at_p90, mcc, runtime_explainability]
+  test_use: confirm_once
+
+budget:
+  steps_per_day: 24
+  # A budget "day" is a 24-step window counted from the FIRST step of each set
+  # (val: 324-347, 348-371; test: 378-401 ... 714-737). This gives validation two
+  # full days instead of one calendar day; the trailing partial window is dropped.
+  day_windows: from_set_start
+  K: [100, 250, 500, 1000]
+  operating_K: 250
+  review_cost_fraction_of_median_fraud: [0.001, 0.01, 0.05]
+  calibration: isotonic
+  exclude_partial_days: true               # trailing window with fewer than 24 steps
+  skip_day_if_rows_le_K: true              # per K: a day with <= K rows is not scored at that K
+
+bias:
+  groups: [type, amount_quartile, hour_block_6h]
+  recall_ratio_min: 0.8
+  false_alarm_ratio_max: 1.25
+  min_frauds_to_judge: 30
+  min_legit_for_far: 1000                  # false-alarm ratio shown but not judged below this
+
+explain:
+  # Candidate reason codes after EDA (report 3.6). Kept only if SHAP supports them.
+  reason_codes:
+    R1: {text: "The sender's account was emptied by this transaction.", rule: "newbalanceOrig == 0 and oldbalanceOrg > 0"}
+    R2: {text: "The amount equals the sender's whole balance.", rule: "|amount - oldbalanceOrg| <= 0.001 * oldbalanceOrg", rel_tol: 0.001}
+    R3: {text: "The sender's balance change does not match the amount sent.", rule: "errorBalanceOrig != 0",
+         dropped: true,
+         note: "dropped after EDA; kept in explain.json only as an audit trail. As computed (non-zero error) it fires on 90.6% of legitimate training rows vs 0.9% of frauds: 0.3% of alerts, 0% precision. Reversed (error == 0) it covers 98.6% of frauds but duplicates R2 (amount == oldbalanceOrg), and the rows it adds over R2 are legitimate. It adds no information in either direction."}
+    R4: {text: "The receiver's balance change does not match the amount received.", rule: "errorBalanceDest != 0",
+         types: [TRANSFER], note: "not supported for CASH_OUT (fraud 19% vs legit 29%)"}
+    R5: {text: "Unusually large amount for this type of transaction.", rule: "amount > train 75th percentile of its type"}
+    R6: {text: "Transaction made at an unusual hour.", rule: "hour in 0..7"}
+    R7: {text: "The receiver's balance was 0 before and after.", rule: "oldbalanceDest == 0 and newbalanceDest == 0",
+         types: [TRANSFER], note: "new after EDA (fraud 99.3% vs legit 0.02%)"}
+  shap_sample: 10000
+  top_reasons: 3
+  surrogate_depth: 3
+  shap_stability_spearman_min: 0.8
