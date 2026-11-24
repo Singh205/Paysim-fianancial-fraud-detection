@@ -1,0 +1,149 @@
+{
+  "setting": "all",
+  "model": "rf",
+  "threshold": 0.809382975101471,
+  "features": [
+    "amount",
+    "oldbalanceOrg",
+    "newbalanceOrig",
+    "oldbalanceDest",
+    "newbalanceDest",
+    "errorBalanceOrig",
+    "errorBalanceDest",
+    "hour",
+    "is_transfer"
+  ],
+  "shap": {
+    "mean_abs": {
+      "amount": 0.019179904833436012,
+      "oldbalanceOrg": 0.059267133474349976,
+      "newbalanceOrig": 0.07463055104017258,
+      "oldbalanceDest": 0.042333003133535385,
+      "newbalanceDest": 0.02224711701273918,
+      "errorBalanceOrig": 0.3418474793434143,
+      "errorBalanceDest": 0.011826385743916035,
+      "hour": 0.010663223452866077,
+      "is_transfer": 0.009333455003798008
+    },
+    "ranking": [
+      "errorBalanceOrig",
+      "newbalanceOrig",
+      "oldbalanceOrg",
+      "oldbalanceDest",
+      "newbalanceDest",
+      "amount",
+      "errorBalanceDest",
+      "hour",
+      "is_transfer"
+    ],
+    "stability": {
+      "spearman_median": 1.0,
+      "spearman_min": 1.0,
+      "min_required": 0.8,
+      "pass": true
+    }
+  },
+  "surrogate": {
+    "depth": 3,
+    "fit_rows": 10000,
+    "fidelity_rows": 10000,
+    "fidelity": 1.0,
+    "alerts_in_fit_sample": 112,
+    "alerts_in_fidelity_sample": 96,
+    "tree_text": "|--- errorBalanceOrig <= 0.00\n|   |--- newbalanceOrig <= 24.50\n|   |   |--- class: 1\n|   |--- newbalanceOrig >  24.50\n|   |   |--- errorBalanceDest <= 5032408.88\n|   |   |   |--- class: 0\n|   |   |--- errorBalanceDest >  5032408.88\n|   |   |   |--- class: 1\n|--- errorBalanceOrig >  0.00\n|   |--- class: 0\n"
+  },
+  "reason_codes": {
+    "order_by_train_precision": [
+      "R7",
+      "R2",
+      "R6",
+      "R4",
+      "R1",
+      "R5",
+      "R3"
+    ],
+    "train_purity": {
+      "R1": {
+        "train_rows": 828182,
+        "train_frauds": 3568,
+        "train_precision": 0.0043082317654815
+      },
+      "R2": {
+        "train_rows": 3817,
+        "train_frauds": 3567,
+        "train_precision": 0.9345035368090123
+      },
+      "R3": {
+        "train_rows": 1768539,
+        "train_frauds": 32,
+        "train_precision": 1.8094031287972728e-05
+      },
+      "R4": {
+        "train_rows": 120729,
+        "train_frauds": 1811,
+        "train_precision": 0.015000538395911504
+      },
+      "R5": {
+        "train_rows": 487974,
+        "train_frauds": 1745,
+        "train_precision": 0.0035760101972646084
+      },
+      "R6": {
+        "train_rows": 21765,
+        "train_frauds": 1124,
+        "train_precision": 0.0516425453710085
+      },
+      "R7": {
+        "train_rows": 1887,
+        "train_frauds": 1783,
+        "train_precision": 0.9448860625331214
+      }
+    },
+    "on_alerts": {
+      "R7": {
+        "alert_rows": 1948,
+        "alert_precision": 1.0,
+        "coverage_of_alerts": 0.5194666666666666
+      },
+      "R2": {
+        "alert_rows": 3598,
+        "alert_precision": 0.999722067815453,
+        "coverage_of_alerts": 0.9594666666666667
+      },
+      "R6": {
+        "alert_rows": 1330,
+        "alert_precision": 0.9969924812030075,
+        "coverage_of_alerts": 0.3546666666666667
+      },
+      "R4": {
+        "alert_rows": 1302,
+        "alert_precision": 0.9961597542242704,
+        "coverage_of_alerts": 0.3472
+      },
+      "R1": {
+        "alert_rows": 1738,
+        "alert_precision": 0.998849252013809,
+        "coverage_of_alerts": 0.4634666666666667
+      },
+      "R5": {
+        "alert_rows": 849,
+        "alert_precision": 0.9988221436984688,
+        "coverage_of_alerts": 0.2264
+      },
+      "R3": {
+        "alert_rows": 12,
+        "alert_precision": 0.0,
+        "coverage_of_alerts": 0.0032
+      }
+    },
+    "alerts": 3750,
+    "alerts_with_code": 3700,
+    "operating_K": 250
+  },
+  "shap_supports": {
+    "balance_error_features_in_top5": [
+      "errorBalanceOrig"
+    ],
+    "note": "codes are kept only if SHAP ranks their features highly"
+  }
+}

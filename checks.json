@@ -1,0 +1,836 @@
+{
+  "load_seconds": 3.4,
+  "memory_mb": 394.3,
+  "full": {
+    "rows": 6362620,
+    "columns": [
+      "step",
+      "type",
+      "amount",
+      "nameOrig",
+      "oldbalanceOrg",
+      "newbalanceOrig",
+      "nameDest",
+      "oldbalanceDest",
+      "newbalanceDest",
+      "isFraud",
+      "isFlaggedFraud"
+    ],
+    "missing_values": 0,
+    "duplicate_rows": 0,
+    "frauds": 8213,
+    "fraud_share": 0.001290820448180152,
+    "step_min": 1,
+    "step_max": 743,
+    "distinct_steps": 743,
+    "rows_by_type": {
+      "CASH_OUT": 2237500,
+      "PAYMENT": 2151495,
+      "CASH_IN": 1399284,
+      "TRANSFER": 532909,
+      "DEBIT": 41432
+    },
+    "frauds_by_type": {
+      "CASH_IN": 0,
+      "CASH_OUT": 4116,
+      "DEBIT": 0,
+      "PAYMENT": 0,
+      "TRANSFER": 4097
+    },
+    "negative_amount_or_balance": 0,
+    "zero_amount_rows": 16,
+    "isFlaggedFraud": {
+      "flagged": 16,
+      "flagged_and_fraud": 16
+    },
+    "merchant_dest_types": {
+      "PAYMENT": 2151495
+    },
+    "matches_report": {
+      "rows": true,
+      "frauds": true,
+      "fraud_transfer": true,
+      "fraud_cash_out": true,
+      "frauds_only_in_model_types": true
+    }
+  },
+  "subset": {
+    "rows": 2770409,
+    "frauds": 8213,
+    "fraud_share": 0.002964544224336551,
+    "scale_pos_weight_whole_subset": 336.3199805186899
+  },
+  "split": {
+    "rule": "ordered by step, cut at 70%/85% of rows (end of step): train <= 323, val <= 377, test > 377",
+    "b_train": 323,
+    "b_val": 377,
+    "train": {
+      "steps": [
+        1,
+        323
+      ],
+      "rows": 1951895,
+      "row_share": 0.7045512052552529,
+      "frauds": 3643,
+      "fraud_share_of_all_frauds": 0.4435650797516133,
+      "fraud_rate": 0.001866391378634609,
+      "scale_pos_weight": 534.7933022234422,
+      "median_fraud_amount": 417217.875,
+      "amount_quartiles": [
+        82979.15234375,
+        171080.9375,
+        305452.609375
+      ]
+    },
+    "val": {
+      "steps": [
+        324,
+        377
+      ],
+      "rows": 410437,
+      "row_share": 0.14815032726214794,
+      "frauds": 560,
+      "fraud_share_of_all_frauds": 0.06818458541336905,
+      "fraud_rate": 0.0013643994084353993
+    },
+    "test": {
+      "steps": [
+        378,
+        743
+      ],
+      "rows": 408077,
+      "row_share": 0.14729846748259914,
+      "frauds": 4010,
+      "fraud_share_of_all_frauds": 0.4882503348350177,
+      "fraud_rate": 0.009826576847016617
+    }
+  },
+  "fraud_only_steps": 320,
+  "bias_group_sizes": {
+    "val": {
+      "type": {
+        "CASH_OUT": {
+          "frauds": 280,
+          "legit": 329688
+        },
+        "TRANSFER": {
+          "frauds": 280,
+          "legit": 80189
+        }
+      },
+      "amount_band": {
+        "0": {
+          "frauds": 98,
+          "legit": 98558
+        },
+        "1": {
+          "frauds": 78,
+          "legit": 98581
+        },
+        "2": {
+          "frauds": 66,
+          "legit": 101182
+        },
+        "3": {
+          "frauds": 318,
+          "legit": 111556
+        }
+      },
+      "hour_block": {
+        "0": {
+          "frauds": 138,
+          "legit": 2227
+        },
+        "1": {
+          "frauds": 110,
+          "legit": 60468
+        },
+        "2": {
+          "frauds": 208,
+          "legit": 220555
+        },
+        "3": {
+          "frauds": 104,
+          "legit": 126627
+        }
+      }
+    },
+    "test": {
+      "type": {
+        "CASH_OUT": {
+          "frauds": 2005,
+          "legit": 322880
+        },
+        "TRANSFER": {
+          "frauds": 2005,
+          "legit": 81187
+        }
+      },
+      "amount_band": {
+        "0": {
+          "frauds": 715,
+          "legit": 105300
+        },
+        "1": {
+          "frauds": 450,
+          "legit": 104181
+        },
+        "2": {
+          "frauds": 466,
+          "legit": 99618
+        },
+        "3": {
+          "frauds": 2379,
+          "legit": 94968
+        }
+      },
+      "hour_block": {
+        "0": {
+          "frauds": 1034,
+          "legit": 5410
+        },
+        "1": {
+          "frauds": 990,
+          "legit": 50516
+        },
+        "2": {
+          "frauds": 976,
+          "legit": 148916
+        },
+        "3": {
+          "frauds": 1010,
+          "legit": 199225
+        }
+      }
+    }
+  },
+  "rolling_blocks": [
+    {
+      "block": 1,
+      "steps": [
+        1,
+        65
+      ],
+      "rows": 454278,
+      "frauds": 782
+    },
+    {
+      "block": 2,
+      "steps": [
+        66,
+        129
+      ],
+      "rows": 21362,
+      "frauds": 704
+    },
+    {
+      "block": 3,
+      "steps": [
+        130,
+        194
+      ],
+      "rows": 569596,
+      "frauds": 716
+    },
+    {
+      "block": 4,
+      "steps": [
+        195,
+        258
+      ],
+      "rows": 488272,
+      "frauds": 701
+    },
+    {
+      "block": 5,
+      "steps": [
+        259,
+        323
+      ],
+      "rows": 418387,
+      "frauds": 740
+    }
+  ],
+  "per_day_subset": [
+    {
+      "day": 0,
+      "first_step": 1,
+      "last_step": 23,
+      "n_steps": 23,
+      "rows": 250180,
+      "frauds": 265,
+      "fraud_amount": 208593760.0,
+      "fraud_rate": 0.0010592373491086417
+    },
+    {
+      "day": 1,
+      "first_step": 24,
+      "last_step": 47,
+      "n_steps": 24,
+      "rows": 202388,
+      "frauds": 305,
+      "fraud_amount": 366307296.0,
+      "fraud_rate": 0.0015070063442496591
+    },
+    {
+      "day": 2,
+      "first_step": 48,
+      "last_step": 71,
+      "n_steps": 24,
+      "rows": 1804,
+      "frauds": 306,
+      "fraud_amount": 350162912.0,
+      "fraud_rate": 0.1696230598669623
+    },
+    {
+      "day": 3,
+      "first_step": 72,
+      "last_step": 95,
+      "n_steps": 24,
+      "rows": 7145,
+      "frauds": 272,
+      "fraud_amount": 461559680.0,
+      "fraud_rate": 0.03806857942617215
+    },
+    {
+      "day": 4,
+      "first_step": 96,
+      "last_step": 119,
+      "n_steps": 24,
+      "rows": 3586,
+      "frauds": 244,
+      "fraud_amount": 275020416.0,
+      "fraud_rate": 0.06804238706079196
+    },
+    {
+      "day": 5,
+      "first_step": 120,
+      "last_step": 143,
+      "n_steps": 24,
+      "rows": 195729,
+      "frauds": 230,
+      "fraud_amount": 366718272.0,
+      "fraud_rate": 0.001175094135258444
+    },
+    {
+      "day": 6,
+      "first_step": 144,
+      "last_step": 167,
+      "n_steps": 24,
+      "rows": 185960,
+      "frauds": 280,
+      "fraud_amount": 393773952.0,
+      "fraud_rate": 0.001505700150570015
+    },
+    {
+      "day": 7,
+      "first_step": 168,
+      "last_step": 191,
+      "n_steps": 24,
+      "rows": 196933,
+      "frauds": 270,
+      "fraud_amount": 358711552.0,
+      "fraud_rate": 0.0013710246632103304
+    },
+    {
+      "day": 8,
+      "first_step": 192,
+      "last_step": 215,
+      "n_steps": 24,
+      "rows": 181672,
+      "frauds": 259,
+      "fraud_amount": 389350208.0,
+      "fraud_rate": 0.0014256462195605267
+    },
+    {
+      "day": 9,
+      "first_step": 216,
+      "last_step": 239,
+      "n_steps": 24,
+      "rows": 171785,
+      "frauds": 274,
+      "fraud_amount": 364992672.0,
+      "fraud_rate": 0.0015950170270978257
+    },
+    {
+      "day": 10,
+      "first_step": 240,
+      "last_step": 263,
+      "n_steps": 24,
+      "rows": 182238,
+      "frauds": 268,
+      "fraud_amount": 425587552.0,
+      "fraud_rate": 0.0014706043744992811
+    },
+    {
+      "day": 11,
+      "first_step": 264,
+      "last_step": 287,
+      "n_steps": 24,
+      "rows": 149327,
+      "frauds": 296,
+      "fraud_amount": 429005920.0,
+      "fraud_rate": 0.0019822269248026144
+    },
+    {
+      "day": 12,
+      "first_step": 288,
+      "last_step": 311,
+      "n_steps": 24,
+      "rows": 188837,
+      "frauds": 242,
+      "fraud_amount": 394714720.0,
+      "fraud_rate": 0.0012815285140094367
+    },
+    {
+      "day": 13,
+      "first_step": 312,
+      "last_step": 335,
+      "n_steps": 24,
+      "rows": 172639,
+      "frauds": 238,
+      "fraud_amount": 288667744.0,
+      "fraud_rate": 0.0013785992736287862
+    },
+    {
+      "day": 14,
+      "first_step": 336,
+      "last_step": 359,
+      "n_steps": 24,
+      "rows": 173709,
+      "frauds": 260,
+      "fraud_amount": 406113888.0,
+      "fraud_rate": 0.0014967560690580222
+    },
+    {
+      "day": 15,
+      "first_step": 360,
+      "last_step": 383,
+      "n_steps": 24,
+      "rows": 163208,
+      "frauds": 254,
+      "fraud_amount": 334425376.0,
+      "fraud_rate": 0.0015562962599872554
+    },
+    {
+      "day": 16,
+      "first_step": 384,
+      "last_step": 407,
+      "n_steps": 24,
+      "rows": 186610,
+      "frauds": 316,
+      "fraud_amount": 633637120.0,
+      "fraud_rate": 0.0016933712019720271
+    },
+    {
+      "day": 17,
+      "first_step": 408,
+      "last_step": 431,
+      "n_steps": 24,
+      "rows": 10136,
+      "frauds": 274,
+      "fraud_amount": 548977408.0,
+      "fraud_rate": 0.027032359905288083
+    },
+    {
+      "day": 18,
+      "first_step": 432,
+      "last_step": 455,
+      "n_steps": 24,
+      "rows": 4209,
+      "frauds": 242,
+      "fraud_amount": 432893728.0,
+      "fraud_rate": 0.05749584224281302
+    },
+    {
+      "day": 19,
+      "first_step": 456,
+      "last_step": 479,
+      "n_steps": 24,
+      "rows": 8154,
+      "frauds": 248,
+      "fraud_amount": 306688032.0,
+      "fraud_rate": 0.030414520480745645
+    },
+    {
+      "day": 20,
+      "first_step": 480,
+      "last_step": 503,
+      "n_steps": 24,
+      "rows": 10104,
+      "frauds": 268,
+      "fraud_amount": 381128384.0,
+      "fraud_rate": 0.026524148851939825
+    },
+    {
+      "day": 21,
+      "first_step": 504,
+      "last_step": 527,
+      "n_steps": 24,
+      "rows": 21355,
+      "frauds": 252,
+      "fraud_amount": 409684032.0,
+      "fraud_rate": 0.011800515101849684
+    },
+    {
+      "day": 22,
+      "first_step": 528,
+      "last_step": 551,
+      "n_steps": 24,
+      "rows": 20702,
+      "frauds": 220,
+      "fraud_amount": 225615968.0,
+      "fraud_rate": 0.010626992561105207
+    },
+    {
+      "day": 23,
+      "first_step": 552,
+      "last_step": 575,
+      "n_steps": 24,
+      "rows": 13882,
+      "frauds": 276,
+      "fraud_amount": 329355072.0,
+      "fraud_rate": 0.019881861403256016
+    },
+    {
+      "day": 24,
+      "first_step": 576,
+      "last_step": 599,
+      "n_steps": 24,
+      "rows": 24549,
+      "frauds": 236,
+      "fraud_amount": 280474784.0,
+      "fraud_rate": 0.009613426208806876
+    },
+    {
+      "day": 25,
+      "first_step": 600,
+      "last_step": 623,
+      "n_steps": 24,
+      "rows": 5466,
+      "frauds": 280,
+      "fraud_amount": 404444320.0,
+      "fraud_rate": 0.05122575923893158
+    },
+    {
+      "day": 26,
+      "first_step": 624,
+      "last_step": 647,
+      "n_steps": 24,
+      "rows": 3718,
+      "frauds": 276,
+      "fraud_amount": 457345952.0,
+      "fraud_rate": 0.07423345884884347
+    },
+    {
+      "day": 27,
+      "first_step": 648,
+      "last_step": 671,
+      "n_steps": 24,
+      "rows": 5680,
+      "frauds": 254,
+      "fraud_amount": 369817888.0,
+      "fraud_rate": 0.04471830985915493
+    },
+    {
+      "day": 28,
+      "first_step": 672,
+      "last_step": 695,
+      "n_steps": 24,
+      "rows": 23365,
+      "frauds": 262,
+      "fraud_amount": 515175680.0,
+      "fraud_rate": 0.011213353306227263
+    },
+    {
+      "day": 29,
+      "first_step": 696,
+      "last_step": 719,
+      "n_steps": 24,
+      "rows": 5057,
+      "frauds": 264,
+      "fraud_amount": 497767360.0,
+      "fraud_rate": 0.052204864544196164
+    },
+    {
+      "day": 30,
+      "first_step": 720,
+      "last_step": 743,
+      "n_steps": 24,
+      "rows": 282,
+      "frauds": 282,
+      "fraud_amount": 449703488.0,
+      "fraud_rate": 1.0
+    }
+  ],
+  "test_days": [
+    {
+      "day": 15,
+      "first_step": 378,
+      "last_step": 383,
+      "n_steps": 6,
+      "rows": 64808,
+      "frauds": 60,
+      "fraud_amount": 81098424.0,
+      "fraud_rate": 0.0009258116281940501
+    },
+    {
+      "day": 16,
+      "first_step": 384,
+      "last_step": 407,
+      "n_steps": 24,
+      "rows": 186610,
+      "frauds": 316,
+      "fraud_amount": 633637120.0,
+      "fraud_rate": 0.0016933712019720271
+    },
+    {
+      "day": 17,
+      "first_step": 408,
+      "last_step": 431,
+      "n_steps": 24,
+      "rows": 10136,
+      "frauds": 274,
+      "fraud_amount": 548977408.0,
+      "fraud_rate": 0.027032359905288083
+    },
+    {
+      "day": 18,
+      "first_step": 432,
+      "last_step": 455,
+      "n_steps": 24,
+      "rows": 4209,
+      "frauds": 242,
+      "fraud_amount": 432893728.0,
+      "fraud_rate": 0.05749584224281302
+    },
+    {
+      "day": 19,
+      "first_step": 456,
+      "last_step": 479,
+      "n_steps": 24,
+      "rows": 8154,
+      "frauds": 248,
+      "fraud_amount": 306688032.0,
+      "fraud_rate": 0.030414520480745645
+    },
+    {
+      "day": 20,
+      "first_step": 480,
+      "last_step": 503,
+      "n_steps": 24,
+      "rows": 10104,
+      "frauds": 268,
+      "fraud_amount": 381128384.0,
+      "fraud_rate": 0.026524148851939825
+    },
+    {
+      "day": 21,
+      "first_step": 504,
+      "last_step": 527,
+      "n_steps": 24,
+      "rows": 21355,
+      "frauds": 252,
+      "fraud_amount": 409684032.0,
+      "fraud_rate": 0.011800515101849684
+    },
+    {
+      "day": 22,
+      "first_step": 528,
+      "last_step": 551,
+      "n_steps": 24,
+      "rows": 20702,
+      "frauds": 220,
+      "fraud_amount": 225615968.0,
+      "fraud_rate": 0.010626992561105207
+    },
+    {
+      "day": 23,
+      "first_step": 552,
+      "last_step": 575,
+      "n_steps": 24,
+      "rows": 13882,
+      "frauds": 276,
+      "fraud_amount": 329355072.0,
+      "fraud_rate": 0.019881861403256016
+    },
+    {
+      "day": 24,
+      "first_step": 576,
+      "last_step": 599,
+      "n_steps": 24,
+      "rows": 24549,
+      "frauds": 236,
+      "fraud_amount": 280474784.0,
+      "fraud_rate": 0.009613426208806876
+    },
+    {
+      "day": 25,
+      "first_step": 600,
+      "last_step": 623,
+      "n_steps": 24,
+      "rows": 5466,
+      "frauds": 280,
+      "fraud_amount": 404444320.0,
+      "fraud_rate": 0.05122575923893158
+    },
+    {
+      "day": 26,
+      "first_step": 624,
+      "last_step": 647,
+      "n_steps": 24,
+      "rows": 3718,
+      "frauds": 276,
+      "fraud_amount": 457345952.0,
+      "fraud_rate": 0.07423345884884347
+    },
+    {
+      "day": 27,
+      "first_step": 648,
+      "last_step": 671,
+      "n_steps": 24,
+      "rows": 5680,
+      "frauds": 254,
+      "fraud_amount": 369817888.0,
+      "fraud_rate": 0.04471830985915493
+    },
+    {
+      "day": 28,
+      "first_step": 672,
+      "last_step": 695,
+      "n_steps": 24,
+      "rows": 23365,
+      "frauds": 262,
+      "fraud_amount": 515175680.0,
+      "fraud_rate": 0.011213353306227263
+    },
+    {
+      "day": 29,
+      "first_step": 696,
+      "last_step": 719,
+      "n_steps": 24,
+      "rows": 5057,
+      "frauds": 264,
+      "fraud_amount": 497767360.0,
+      "fraud_rate": 0.052204864544196164
+    },
+    {
+      "day": 30,
+      "first_step": 720,
+      "last_step": 743,
+      "n_steps": 24,
+      "rows": 282,
+      "frauds": 282,
+      "fraud_amount": 449703488.0,
+      "fraud_rate": 1.0
+    }
+  ],
+  "per_step_rows_by_split": {
+    "train": {
+      "mean": 6043.0185758513935,
+      "min": 2
+    },
+    "val": {
+      "mean": 7600.685185185185,
+      "min": 6
+    },
+    "test": {
+      "mean": 1114.964480874317,
+      "min": 2
+    }
+  },
+  "budget_check": {
+    "val": {
+      "days_total": 3,
+      "days_full_24_steps": 1,
+      "partial_days_dropped": [
+        13,
+        15
+      ],
+      "rows_per_full_day": {
+        "min": 173709,
+        "median": 173709.0,
+        "max": 173709
+      },
+      "frauds_per_full_day": {
+        "min": 260,
+        "mean": 260.0,
+        "max": 260
+      },
+      "per_K": {
+        "100": {
+          "days_scored": 1,
+          "days_skipped_rows_le_K": [],
+          "scored_days_where_K_ge_frauds": 0,
+          "frauds_in_scored_days": 260
+        },
+        "250": {
+          "days_scored": 1,
+          "days_skipped_rows_le_K": [],
+          "scored_days_where_K_ge_frauds": 0,
+          "frauds_in_scored_days": 260
+        },
+        "500": {
+          "days_scored": 1,
+          "days_skipped_rows_le_K": [],
+          "scored_days_where_K_ge_frauds": 1,
+          "frauds_in_scored_days": 260
+        },
+        "1000": {
+          "days_scored": 1,
+          "days_skipped_rows_le_K": [],
+          "scored_days_where_K_ge_frauds": 1,
+          "frauds_in_scored_days": 260
+        }
+      }
+    },
+    "test": {
+      "days_total": 16,
+      "days_full_24_steps": 15,
+      "partial_days_dropped": [
+        15
+      ],
+      "rows_per_full_day": {
+        "min": 282,
+        "median": 10104.0,
+        "max": 186610
+      },
+      "frauds_per_full_day": {
+        "min": 220,
+        "mean": 263.3333333333333,
+        "max": 316
+      },
+      "per_K": {
+        "100": {
+          "days_scored": 15,
+          "days_skipped_rows_le_K": [],
+          "scored_days_where_K_ge_frauds": 0,
+          "frauds_in_scored_days": 3950
+        },
+        "250": {
+          "days_scored": 15,
+          "days_skipped_rows_le_K": [],
+          "scored_days_where_K_ge_frauds": 4,
+          "frauds_in_scored_days": 3950
+        },
+        "500": {
+          "days_scored": 14,
+          "days_skipped_rows_le_K": [
+            30
+          ],
+          "scored_days_where_K_ge_frauds": 14,
+          "frauds_in_scored_days": 3668
+        },
+        "1000": {
+          "days_scored": 14,
+          "days_skipped_rows_le_K": [
+            30
+          ],
+          "scored_days_where_K_ge_frauds": 14,
+          "frauds_in_scored_days": 3668
+        }
+      }
+    }
+  },
+  "total_seconds": 10.4
+}
